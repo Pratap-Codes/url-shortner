@@ -3,8 +3,11 @@ const path = require('path');
 const connectToMongoDB = require('./connect');
 
 const URL = require('./models/url')
+
 const urlRoute = require("./routes/url");
 const staticRouter = require("./routes/staticRouter");
+const userRoute = require("./routes/user")
+
 const app = express();
 const PORT = 8001;
 
@@ -19,8 +22,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 app.use("/", staticRouter);
-
 app.use("/url", urlRoute);
+app.use("/user", userRoute);
+
 app.get('/:shortId', async (req, res) => {
     const shortId = req.params.shortId;
     const entry = await URL.findOneAndUpdate({
@@ -33,6 +37,6 @@ app.get('/:shortId', async (req, res) => {
         },
     }
     );
-    res.redirect(entry.redirectUrl);
+    // res.redirect(entry.redirectUrl);
 })
 app.listen(PORT, () => { console.log(`server has started at PORT: ${PORT}`) });
